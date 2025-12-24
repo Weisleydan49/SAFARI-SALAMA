@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="DBE_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.dart_tool/widget_preview_scaffold/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.dart_tool/widget_preview_scaffold/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.dart_tool/widget_preview_scaffold/build" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/build" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
