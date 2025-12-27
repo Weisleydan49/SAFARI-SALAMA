@@ -109,7 +109,7 @@ This is a proprietary project. Contributions are by invitation only.
 
 Copyright © 2025 SafariSalama. All rights reserved.
 
-This software is proprietary and confidential. For licensing inquiries, contact [your-email@example.com]
+This software is proprietary and confidential. For licensing inquiries, contact [weisleyalmond@outlook.com]
 
 ## Contact
 
