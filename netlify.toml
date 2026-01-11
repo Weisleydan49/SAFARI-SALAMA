@@ -1,0 +1,7 @@
+[build]
+command = "bash ./netlify-build.sh"
+publish = "build/web"
+
+# Optional. Makes builds faster by caching Flutter and pub packages.
+[build.environment]
+FLUTTER_HOME = "/opt/flutter"
