@@ -2,7 +2,7 @@
 class ApiConfig {
   // Base URL for your backend API
   // Replace with your actual backend URL
-  static const String baseUrl = 'http://192.168.8.108:8000';
+  static const String baseUrl = 'https://safarisalama-api.onrender.com';
   
   // API endpoints
   static const String loginEndpoint = '/api/auth/login';
