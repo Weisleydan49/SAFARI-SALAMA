@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/route_model.dart';
 import '../services/route_service.dart';
+import 'route_detail_screen.dart';
 
 class RoutesListScreen extends StatefulWidget {
   const RoutesListScreen({Key? key}) : super(key: key);
@@ -122,12 +123,12 @@ class _RoutesListScreenState extends State<RoutesListScreen> {
               child: _filteredRoutes.isEmpty
                   ? const Center(child: Text('No routes found'))
                   : ListView.builder(
-                      itemCount: _filteredRoutes.length,
-                      itemBuilder: (context, index) {
-                        final route = _filteredRoutes[index];
-                        return _buildRouteCard(route);
-                      },
-                    ),
+                itemCount: _filteredRoutes.length,
+                itemBuilder: (context, index) {
+                  final route = _filteredRoutes[index];
+                  return _buildRouteCard(route);
+                },
+              ),
             ),
         ],
       ),
@@ -148,7 +149,7 @@ class _RoutesListScreenState extends State<RoutesListScreen> {
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        
+
         // Route name and details
         title: Text(
           route.name,
@@ -183,15 +184,16 @@ class _RoutesListScreenState extends State<RoutesListScreen> {
             ),
           ],
         ),
-        
+
         // Tap to view route details
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
-          // Navigate to route details screen (we'll create this next)
-          Navigator.pushNamed(
+          // Navigate to route details screen with direct navigation
+          Navigator.push(
             context,
-            '/route-details',
-            arguments: route,
+            MaterialPageRoute(
+              builder: (context) => RouteDetailScreen(route: route),
+            ),
           );
         },
       ),

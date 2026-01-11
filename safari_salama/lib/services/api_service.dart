@@ -4,17 +4,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
   static final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
-  
+
   // Helper method to get headers
   static Map<String, String> _getHeaders({String? token}) {
     final headers = {
       'Content-Type': 'application/json',
     };
-    
+
     if (token != null) {
       headers['Authorization'] = 'Bearer $token';
     }
-    
+
     return headers;
   }
 
@@ -27,7 +27,7 @@ class ApiService {
     String userType = 'passenger',
   }) async {
     final url = Uri.parse('$baseUrl/api/auth/register');
-    
+
     final response = await http.post(
       url,
       headers: _getHeaders(),
@@ -53,7 +53,7 @@ class ApiService {
     required String password,
   }) async {
     final url = Uri.parse('$baseUrl/api/auth/login');
-    
+
     final response = await http.post(
       url,
       headers: _getHeaders(),
@@ -73,7 +73,7 @@ class ApiService {
   // Get all routes
   static Future<List<dynamic>> getRoutes() async {
     final url = Uri.parse('$baseUrl/api/routes');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(),
@@ -92,7 +92,7 @@ class ApiService {
     if (routeId != null) {
       url += '?route_id=$routeId&is_online=true';
     }
-    
+
     final response = await http.get(
       Uri.parse(url),
       headers: _getHeaders(),
@@ -102,6 +102,22 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load vehicles');
+    }
+  }
+
+  // NEW METHOD: Get vehicles by route ID
+  static Future<List<dynamic>> getVehiclesByRoute(String routeId) async {
+    final url = Uri.parse('$baseUrl/api/vehicles/location?route_id=$routeId&is_online=true');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load vehicles for route');
     }
   }
 
@@ -115,7 +131,7 @@ class ApiService {
     double? fareAmount,
   }) async {
     final url = Uri.parse('$baseUrl/api/trips/start?user_id=$userId');
-    
+
     final response = await http.post(
       url,
       headers: _getHeaders(),
@@ -142,7 +158,7 @@ class ApiService {
     required double endLongitude,
   }) async {
     final url = Uri.parse('$baseUrl/api/trips/$tripId/end');
-    
+
     final response = await http.patch(
       url,
       headers: _getHeaders(),
@@ -170,7 +186,7 @@ class ApiService {
     String? tripId,
   }) async {
     final url = Uri.parse('$baseUrl/api/emergency?user_id=$userId');
-    
+
     final response = await http.post(
       url,
       headers: _getHeaders(),
@@ -194,7 +210,7 @@ class ApiService {
   // Get user's active trip
   static Future<Map<String, dynamic>?> getActiveTrip(String userId) async {
     final url = Uri.parse('$baseUrl/api/trips/user/$userId/active');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(),
@@ -215,7 +231,7 @@ class ApiService {
     required List<Map<String, dynamic>> locations,
   }) async {
     final url = Uri.parse('$baseUrl/api/trips/$tripId/sync-locations');
-    
+
     final response = await http.post(
       url,
       headers: _getHeaders(),
@@ -237,7 +253,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/users/$userId');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(token: token),
@@ -259,7 +275,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/users/$userId/profile');
-    
+
     final body = {};
     if (name != null) body['name'] = name;
     if (email != null) body['email'] = email;
@@ -286,7 +302,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/trips/user/$userId/history?skip=$skip&limit=$limit');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(token: token),
@@ -306,7 +322,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/drivers/$driverId/dashboard');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(token: token),
@@ -326,7 +342,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/drivers/$driverId/earnings?days=$days');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(token: token),
@@ -345,7 +361,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/api/drivers/$driverId/rating');
-    
+
     final response = await http.get(
       url,
       headers: _getHeaders(token: token),
@@ -358,24 +374,22 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>?> validateToken(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/auth/me'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
-static Future<Map<String, dynamic>?> validateToken(String token) async {
-  try {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/auth/me'), // Or whatever your backend endpoint is
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-    
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
-    return null;
-  } catch (e) {
-    return null;
   }
 }
-}
-

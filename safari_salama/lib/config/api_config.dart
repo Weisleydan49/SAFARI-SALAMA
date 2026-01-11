@@ -2,7 +2,7 @@
 class ApiConfig {
   // Base URL for your backend API
   // Replace with your actual backend URL
-  static const String baseUrl = 'http://192.168.100.14:8000';
+  static const String baseUrl = 'http://192.168.137.1:8000';
   
   // API endpoints
   static const String loginEndpoint = '/api/auth/login';
@@ -13,3 +13,4 @@ class ApiConfig {
   // Timeout duration for API requests
   static const Duration timeout = Duration(seconds: 10);
 }
+
