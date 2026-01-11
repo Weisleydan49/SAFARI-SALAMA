@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'services/auth_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Load environment variables
   await dotenv.load(fileName: ".env");
-  
   runApp(const MyApp());
 }
 
@@ -20,16 +17,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Safari Salama',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
-        useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: const SplashScreen(), // Changed from LoginScreen to SplashScreen
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
+// New SplashScreen widget to check auth status
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -41,23 +38,28 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _checkAuthStatus();
   }
 
-  Future<void> _checkLoginStatus() async {
-    // Simulate splash delay to show logo
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // Check if user has valid login token
-    final isLoggedIn = await AuthService.isLoggedIn();
-    
+  // Check if user is already logged in
+  Future<void> _checkAuthStatus() async {
+    await Future.delayed(const Duration(seconds: 1)); // Show splash briefly
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
     if (mounted) {
-      // Navigate to appropriate screen based on login status
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => isLoggedIn ? const HomeScreen() : const LoginScreen(),
-        ),
-      );
+      if (token != null && token.isNotEmpty) {
+        // User is logged in, go to home
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // User not logged in, go to login
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
     }
   }
 
@@ -69,13 +71,12 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Safari Salama logo - increased size for better visibility
             Image.asset(
               'assets/images/safari_salama_logo.png',
-              width: 150,  // Increased from 120 to 150
-              height: 150,
+              width: 120,
+              height: 120,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             const Text(
               'Safari Salama',
               style: TextStyle(
@@ -92,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.white70,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
             const CircularProgressIndicator(
               color: Colors.white,
             ),

@@ -18,7 +18,7 @@ class TripStatus(str, Enum):
     cancelled = "cancelled"
 
 class TripStart(BaseModel):
-    vehicle_id: UUID
+    vehicle_id: Optional[UUID] = None
     route_id: Optional[UUID] = None
     start_latitude: Decimal = Field(..., description="Starting latitude")
     start_longitude: Decimal = Field(..., description="Starting longitude")

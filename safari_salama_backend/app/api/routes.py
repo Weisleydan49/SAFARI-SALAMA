@@ -7,7 +7,7 @@ from app.models.stop import Stop
 from app.models.route_stop import RouteStop
 from app.schemas.route import RouteCreate, RouteResponse
 
-router = APIRouter(prefix="/routes", tags=["routes"])
+router = APIRouter(prefix="/api/routes", tags=["routes"])
 
 
 @router.get("", response_model=List[RouteResponse])

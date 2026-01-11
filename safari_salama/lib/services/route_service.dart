@@ -15,16 +15,31 @@ class RouteService {
 
       // Check if request was successful
       if (response.statusCode == 200) {
+        // Print raw response for debugging
+        print('Raw API Response: ${response.body}');
+
         // Decode JSON response
-        final List<dynamic> data = json.decode(response.body);
-        
+        final dynamic decodedData = json.decode(response.body);
+
+        // Check if response is a List
+        if (decodedData is! List) {
+          print('ERROR: Expected List but got ${decodedData.runtimeType}');
+          throw Exception('Invalid response format');
+        }
+
+        final List<dynamic> data = decodedData;
+
         // Convert each JSON object to RouteModel
-        return data.map((json) => RouteModel.fromJson(json)).toList();
+        return data.map((json) {
+          print('Processing route: $json');
+          return RouteModel.fromJson(json);
+        }).toList();
       } else {
         throw Exception('Failed to load routes: ${response.statusCode}');
       }
     } catch (e) {
       // Handle any errors (network, timeout, etc.)
+      print('Full error: $e');
       throw Exception('Error fetching routes: $e');
     }
   }

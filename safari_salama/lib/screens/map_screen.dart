@@ -6,6 +6,8 @@ import '../services/api_service.dart';
 import '../models/vehicle.dart';
 import 'emergency_screen.dart';
 import 'active_trip_screen.dart';
+import 'routes_list_screen.dart';
+import 'dart:async';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -18,7 +20,7 @@ class _MapScreenState extends State<MapScreen> {
   GoogleMapController? _mapController;
   
   // Default location: Nairobi CBD
-  final LatLng _nairobCenter = const LatLng(-1.286389, 36.817223);
+  final LatLng _nairobiCenter = const LatLng(-1.286389, 36.817223);
   LatLng? _currentPosition;
   
   Set<Marker> _markers = {};
@@ -290,7 +292,7 @@ class _MapScreenState extends State<MapScreen> {
               _mapController = controller;
             },
             initialCameraPosition: CameraPosition(
-              target: _currentPosition ?? _nairobCenter,
+              target: _currentPosition ?? _nairobiCenter,
               zoom: 13,
             ),
             markers: _markers,
@@ -334,6 +336,29 @@ class _MapScreenState extends State<MapScreen> {
               },
               child: const Icon(Icons.emergency, color: Colors.white, size: 30),
             ),
+          ),
+
+          Positioned(
+            bottom: 150,
+            right: 16,
+            child: FloatingActionButton.extended(
+              backgroundColor: Colors.green[700],
+              onPressed: () {
+                //Navigate to routes list for trip selection
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RoutesListScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add_road, color: Colors.white),
+              label: const Text(
+                'Start Trip',
+                style: TextStyle(
+                  color: Colors.white),
+                ),
+              ),
           ),
           
           // Vehicle count indicator - top left with Safari Salama logo

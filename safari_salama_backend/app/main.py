@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.api import auth, routes, vehicles, emergency, trips, users, drivers
+from app.api.routes import router as routes_router
+
 
 # DEBUG - print database URL
 print(f"DATABASE_URL: {settings.DATABASE_URL}")
@@ -22,6 +24,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(routes.router)
+app.include_router(routes_router)
 app.include_router(vehicles.router)
 app.include_router(emergency.router)
 app.include_router(trips.router)

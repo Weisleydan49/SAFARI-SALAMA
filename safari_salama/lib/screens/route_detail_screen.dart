@@ -70,101 +70,22 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ActiveTripScreen(
-          vehicle: Vehicle(
-            id: '', // Empty - backend will assign
-            registrationNumber: 'Any Available',
-            isOnline: true,
-            vehicleType: 'matatu',
-            capacity: 14,
-          ),
-          route: widget.route,
-        ),
-      ),
-    );
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Select a Vehicle',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.green[100],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '${_vehiclesOnRoute.length} available',
-                    style: TextStyle(
-                      color: Colors.green[700],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _vehiclesOnRoute.length,
-                itemBuilder: (context, index) {
-                  final vehicle = _vehiclesOnRoute[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      leading: Image.asset(
-                        'assets/images/safari_salama_logo.png',
-                        width: 40,
-                        height: 40,
-                      ),
-                      title: Text(
-                        vehicle.registrationNumber,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        '${vehicle.vehicleType} • Capacity: ${vehicle.capacity}',
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {
-                        Navigator.pop(context);
-                        // Navigate to active trip screen with both vehicle and route
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ActiveTripScreen(
-                              vehicle: vehicle,
-                              route: widget.route,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+        builder: (context) =>
+            ActiveTripScreen(
+              vehicle: Vehicle(
+                id: '',
+                // Empty - backend will assign
+                registrationNumber: 'Any Available',
+                isOnline: true,
+                vehicleType: 'matatu',
+                capacity: 14,
               ),
+              route: widget.route,
             ),
-          ],
-        ),
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

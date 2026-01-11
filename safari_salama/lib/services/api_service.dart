@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ApiService {
   static final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
@@ -124,32 +127,36 @@ class ApiService {
   // Start trip
   static Future<Map<String, dynamic>> startTrip({
     required String userId,
-    required String vehicleId,
+    String? vehicleId,
     required double startLatitude,
     required double startLongitude,
     String? routeId,
-    double? fareAmount,
   }) async {
-    final url = Uri.parse('$baseUrl/api/trips/start?user_id=$userId');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
 
     final response = await http.post(
-      url,
-      headers: _getHeaders(),
+      Uri.parse('$baseUrl/api/trips/start'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
       body: jsonEncode({
-        'vehicle_id': vehicleId,
-        'route_id': routeId,
+        'user_id': userId,
+        if (vehicleId != null && vehicleId.isNotEmpty) 'vehicle_id': vehicleId,  // Only include if not empty
         'start_latitude': startLatitude,
         'start_longitude': startLongitude,
-        'fare_amount': fareAmount,
+        if (routeId != null) 'route_id': routeId,
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to start trip: ${response.body}');
     }
   }
+
 
   // End trip
   static Future<Map<String, dynamic>> endTrip({
