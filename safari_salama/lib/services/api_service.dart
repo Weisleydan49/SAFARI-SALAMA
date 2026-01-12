@@ -3,10 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 
 class ApiService {
-  static final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
+  //Use different url for web vs mobile
+  static final String baseUrl = kIsWeb
+      ? 'https://safarisalama-api.onrender.com'
+      : (dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000');
+  // static final String baseUrl =! : dotenv.env['API_BASE_URL']!;
+
 
   // Helper method to get headers
   static Map<String, String> _getHeaders({String? token}) {
