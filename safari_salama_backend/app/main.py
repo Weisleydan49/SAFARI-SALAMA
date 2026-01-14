@@ -3,9 +3,12 @@ from app.core.config import settings
 from app.api import auth, routes, vehicles, emergency, trips, users, drivers
 from app.api.routes import router as routes_router
 
-
-# DEBUG - print database URL
-print(f"DATABASE_URL: {settings.DATABASE_URL}")
+# DEBUG - Show which database we're connecting to
+print("=" * 60)
+print(f"DATABASE_URL: {settings.database_url}")
+print(f"Using Render DATABASE_URL: {settings.DATABASE_URL is not None}")
+print(f"Using Local DB Components: {settings.DATABASE_URL is None}")
+print("=" * 60)
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -13,12 +16,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://safarisalama.netlify.app",
+        "http://localhost:3000",
+        "http://localhost:5000", # Common Flutter web debug port
+    ],
+    # To allow ALL local network IPs for debugging, use allow_origin_regex
+    allow_origin_regex=r"http://192\.168\.\d+\.\d+:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Include routers
 app.include_router(auth.router)
