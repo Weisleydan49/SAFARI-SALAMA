@@ -18,20 +18,16 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
+import bcypt
 def get_password_hash(password: str) -> str:
-    # Ensure password fits in 72 bytes
-    # Truncate and decode safely
     password_bytes = password.encode('utf-8')[:72]
-    # Decode back to string, ignore invalid bytes at end
-    safe_password = password_bytes.decode('utf-8', errors='ignore')
-    return pwd_context.hash(safe_password)
+    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+    return hashed.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    # Match truncation behavior
     password_bytes = plain_password.encode('utf-8')[:72]
-    safe_password = password_bytes.decode('utf-8', errors='ignore')
-    return pwd_context.verify(safe_password, hashed_password)
-
+    return bcrypt.checkpw(password_bytes, hashed_password.encode('utf-8'))
+    
 def create_access_token(data: dict) -> str:
     """Create JWT access token with expiration"""
     to_encode = data.copy()
