@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from app.core.config import settings
-import bcypt
+import bcrypt
 
 # Security scheme - Fix typo: HTTPBearera -> HTTPBearer
 security = HTTPBearer()
