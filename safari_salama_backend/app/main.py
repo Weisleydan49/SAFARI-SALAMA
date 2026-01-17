@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.api import auth, routes, vehicles, emergency, trips, users, drivers
 from app.api.routes import router as routes_router
+from fastapi.middleware.cors import CORSMiddleware
 
 # DEBUG - Show which database we're connecting to
 print("=" * 60)
@@ -12,17 +13,14 @@ print("=" * 60)
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://safarisalama.netlify.app",
         "http://localhost:3000",
-        "http://localhost:5000", # Common Flutter web debug port
+        "http://localhost:5000",
     ],
-    # To allow ALL local network IPs for debugging, use allow_origin_regex
-    allow_origin_regex=r"http://192\.168\.\d+\.\d+:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
