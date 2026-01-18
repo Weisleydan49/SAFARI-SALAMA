@@ -1,0 +1,18 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+/venv
+/.venv
+# Ignore all .env files
+.env
+*.env
+# Ignore all .log files
+*.log
+# Ignore all .tmp files
+*.tmp       
+# Ignore all .bak files
+*.bak
+# Ignore all .swp files (Vim swap files)
