@@ -19,9 +19,10 @@ app.add_middleware(
     allow_origins=[
         "https://safarisalama.netlify.app",
         "http://localhost:3000",
-        "http://192.168.*.*:3000",  # Allow any local network IP
-        "http://10.*.*.*:3000",     # Allow common local network ranges
+        "http://localhost:5000", # Common Flutter web debug port
     ],
+    # To allow ALL local network IPs for debugging, use allow_origin_regex
+    allow_origin_regex=r"http://192\.168\.\d+\.\d+:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

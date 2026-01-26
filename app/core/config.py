@@ -5,6 +5,7 @@ from typing import Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+
 class Settings(BaseSettings):
     # Option 1: Render provides this directly (production)
     DATABASE_URL: Optional[str] = None
@@ -25,21 +26,32 @@ class Settings(BaseSettings):
         Returns DATABASE_URL if provided (Render/production).
         Otherwise builds it from components (local development).
         """
-        # If DATABASE_URL exists, use it (Render)
+        # Render / production
         if self.DATABASE_URL:
             return self.DATABASE_URL
 
-        # Otherwise build from components (local)
-        if not all([self.DB_USER, self.DB_PASSWORD, self.DB_HOST, self.DB_PORT, self.DB_NAME]):
+        # Local development
+        if not all([
+            self.DB_USER,
+            self.DB_PASSWORD,
+            self.DB_HOST,
+            self.DB_PORT,
+            self.DB_NAME,
+        ]):
             raise ValueError(
                 "Either DATABASE_URL or all DB_* variables must be set. "
                 "Check your .env file."
             )
 
         encoded_password = quote_plus(self.DB_PASSWORD)
-        return f"postgresql://{self.DB_USER}:{encoded_password}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return (
+            f"postgresql://{self.DB_USER}:{encoded_password}"
+            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        )
 
     class Config:
         env_file = BASE_DIR / ".env"
+        extra = "ignore"
+
 
 settings = Settings()

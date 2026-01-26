@@ -41,7 +41,7 @@ class RouteResponse(RouteBase):
     is_active: bool
     created_at: datetime
     updated_at: datetime
-    stops: List[RouteStopResponse] = []
+    route_stops: List[RouteStopResponse] = []
 
     class Config:
         orm_mode = True
