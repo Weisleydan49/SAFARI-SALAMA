@@ -57,6 +57,23 @@
       <excludeFolder url="file://$MODULE_DIR$/safari_salama/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/safari_salama/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/safari_salama/windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/safari_salama/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/safari_salama/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/safari_salama/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/caches" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/api" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/queries" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/.idea/runConfigurations" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/ios/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/linux/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/macos/Flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/safari_salama/windows/flutter/ephemeral" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
