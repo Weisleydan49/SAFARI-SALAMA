@@ -8,15 +8,15 @@ plugins {
 android {
     namespace = "com.example.safarisalama"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_21  // Change from VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_21  // Change from VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17  // Change from VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_17  // Change from VERSION_1_8
 }
 
 kotlinOptions {
-    jvmTarget = "21"  // Change from "17" or "1.8"
+    jvmTarget = "17"  // Change from "17" or "1.8"
 }
 
     defaultConfig {

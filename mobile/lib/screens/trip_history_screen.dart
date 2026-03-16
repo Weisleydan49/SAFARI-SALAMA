@@ -1,3 +1,4 @@
+// mobile/lib/screens/trip_history_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/trip.dart';
@@ -5,6 +6,8 @@ import '../services/api_service.dart';
 import 'package:intl/intl.dart';
 
 class TripHistoryScreen extends StatefulWidget {
+  const TripHistoryScreen({super.key});
+
   @override
   _TripHistoryScreenState createState() => _TripHistoryScreenState();
 }
@@ -122,7 +125,7 @@ class _TripHistoryScreenState extends State<TripHistoryScreen> {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
     if (hours > 0) {
-      return '$hours h ${mins} m';
+      return '$hours h $mins m';
     } else {
       return '$mins m';
     }

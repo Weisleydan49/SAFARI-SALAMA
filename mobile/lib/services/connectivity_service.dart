@@ -1,3 +1,4 @@
+// mobile/lib/services/connectivity_service.dart
 import 'dart:async';
 
 /// Service to monitor network connectivity
@@ -5,7 +6,7 @@ import 'dart:async';
 class ConnectivityService {
   static final ConnectivityService _instance = ConnectivityService._internal();
   
-  StreamController<bool> _connectivityController = StreamController<bool>.broadcast();
+  final StreamController<bool> _connectivityController = StreamController<bool>.broadcast();
   StreamSubscription? _subscription;
   bool _isConnected = true;
   

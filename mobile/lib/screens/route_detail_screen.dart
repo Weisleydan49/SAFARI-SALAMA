@@ -1,3 +1,4 @@
+// mobile/lib/screens/route_detail_screen.dart
 import 'package:flutter/material.dart';
 import '../models/route_model.dart';
 import '../models/vehicle.dart';
@@ -8,7 +9,7 @@ import 'active_trip_screen.dart';
 class RouteDetailScreen extends StatefulWidget {
   final RouteModel route;
 
-  const RouteDetailScreen({Key? key, required this.route}) : super(key: key);
+  const RouteDetailScreen({super.key, required this.route});
 
   @override
   State<RouteDetailScreen> createState() => _RouteDetailScreenState();
@@ -321,7 +322,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
         // Shows all stops along the route
         ...widget.route.stops.map((stop) {
           return _buildWaypointItem(stop.sequence, stop.stopName);
-        }).toList(),
+        }),
       ],
     );
   }

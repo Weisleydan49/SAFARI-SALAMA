@@ -1,9 +1,12 @@
+// mobile/lib/screens/driver_dashboard_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import 'package:intl/intl.dart';
 
 class DriverDashboardScreen extends StatefulWidget {
+  const DriverDashboardScreen({super.key});
+
   @override
   _DriverDashboardScreenState createState() => _DriverDashboardScreenState();
 }
@@ -57,8 +60,8 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
       final results = await Future.wait([dashboardFuture, earningsFuture]);
 
       setState(() {
-        _dashboardData = results[0] as Map<String, dynamic>;
-        _earningsData = results[1] as Map<String, dynamic>;
+        _dashboardData = results[0];
+        _earningsData = results[1];
         _isLoading = false;
         _error = null;
       });

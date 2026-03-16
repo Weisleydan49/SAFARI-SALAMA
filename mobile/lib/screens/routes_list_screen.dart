@@ -1,10 +1,11 @@
+// mobile/lib/screens/routes_list_screen.dart
 import 'package:flutter/material.dart';
 import '../models/route_model.dart';
 import '../services/route_service.dart';
 import 'route_detail_screen.dart';
 
 class RoutesListScreen extends StatefulWidget {
-  const RoutesListScreen({Key? key}) : super(key: key);
+  const RoutesListScreen({super.key});
 
   @override
   State<RoutesListScreen> createState() => _RoutesListScreenState();
