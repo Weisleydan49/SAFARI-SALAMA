@@ -18,7 +18,7 @@ class VehicleCreate(VehicleBase):
     pass
 
 class VehicleLocationUpdate(BaseModel):
-    currenr_latitude: Decimal
+    current_latitude: Decimal
     current_longitude: Decimal
 
 class VehicleResponse(VehicleBase):

@@ -16,7 +16,6 @@ class Route(Base):
     description = Column(String)
     estimated_duration_minutes = Column(Integer)
     distance_km = Column(Numeric(10, 2))
-    fare_amount = Column(Numeric(10, 2))
     is_active = Column(Boolean, default=True, server_default='true')
     created_at = Column(DateTime, default=datetime.utcnow, server_default='now()')
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, server_default='now()')

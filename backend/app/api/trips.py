@@ -64,7 +64,6 @@ def start_trip(
         route_id=trip_data.route_id,
         start_latitude=trip_data.start_latitude,
         start_longitude=trip_data.start_longitude,
-        fare_amount=trip_data.fare_amount,
         start_time=datetime.utcnow(),
         trip_status="ongoing"
     )

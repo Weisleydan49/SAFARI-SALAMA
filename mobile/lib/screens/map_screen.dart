@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
+import '../services/websocket_service.dart';
 import '../models/vehicle.dart';
 import 'emergency_screen.dart';
 import 'active_trip_screen.dart';
@@ -26,23 +28,44 @@ class _MapScreenState extends State<MapScreen> {
   Set<Marker> _markers = {};
   List<Vehicle> _vehicles = [];
   bool _isLoading = true;
-  Timer? _refreshTimer;
+  
+  WebSocketService? _wsService;
   
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
     _loadVehicles();
-    
-    // Auto-refresh vehicles every 5 seconds to show real-time updates
-    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _loadVehicles();
-    });
+    _initWebSocket();
   }
   
+  Future<void> _initWebSocket() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('user_id') ?? 'anonymous_passenger';
+    
+    _wsService = WebSocketService(
+      userId: userId,
+      onVehicleLocationUpdate: (updatedVehicle) {
+        if (!mounted) return;
+        setState(() {
+          // Update existing vehicle or add it if we don't have it
+          final index = _vehicles.indexWhere((v) => v.id == updatedVehicle.id);
+          if (index >= 0) {
+            _vehicles[index] = updatedVehicle;
+          } else {
+            _vehicles.add(updatedVehicle);
+          }
+          _updateMarkers();
+        });
+      }
+    );
+    
+    _wsService!.connect();
+  }
+
   @override
   void dispose() {
-    _refreshTimer?.cancel();
+    _wsService?.disconnect();
     _mapController?.dispose();
     super.dispose();
   }
@@ -92,6 +115,14 @@ class _MapScreenState extends State<MapScreen> {
           .where((v) => v.currentLatitude != null && v.currentLongitude != null)
           .toList();
       
+      // Subscribe to their routes
+      if (_wsService != null) {
+        final routeIds = vehicles.map((v) => v.routeId).where((id) => id != null).toSet();
+        for (var rid in routeIds) {
+          _wsService!.subscribeToRoute(rid!);
+        }
+      }
+
       setState(() {
         _vehicles = vehicles;
         _updateMarkers();
@@ -102,6 +133,7 @@ class _MapScreenState extends State<MapScreen> {
       setState(() {
         _isLoading = false;
       });
+
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

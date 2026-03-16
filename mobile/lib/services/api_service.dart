@@ -11,7 +11,7 @@ class ApiService {
   //Use different url for web vs mobile
   static final String baseUrl = kIsWeb
       ? 'https://safarisalama-api.onrender.com'
-      : (dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000');
+      : (dotenv.env['API_BASE_URL'] ?? 'http://192.168.1.198:8000');
   // static final String baseUrl =! : dotenv.env['API_BASE_URL']!;
 
 

@@ -22,7 +22,6 @@ class TripStart(BaseModel):
     route_id: Optional[UUID] = None
     start_latitude: Decimal = Field(..., description="Starting latitude")
     start_longitude: Decimal = Field(..., description="Starting longitude")
-    fare_amount: Optional[Decimal] = None
 
 class TripEnd(BaseModel):
     end_latitude: Decimal = Field(..., description="Ending latitude")
@@ -42,7 +41,6 @@ class TripResponse(BaseModel):
     end_time: Optional[datetime]
     duration_minutes: Optional[int]
     distance_km: Optional[Decimal]
-    fare_amount: Optional[Decimal]
     payment_status: PaymentStatus
     trip_status: TripStatus
     created_at: datetime

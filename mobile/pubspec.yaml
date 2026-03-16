@@ -33,5 +33,6 @@ flutter:
   uses-material-design: true
   
   assets:
+    - .env
     - assets/images/app_icon.png
     - assets/images/safari_salama_logo.png

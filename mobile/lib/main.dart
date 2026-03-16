@@ -8,7 +8,11 @@ import 'package:flutter/foundation.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
-    await dotenv.load(fileName: ".env");
+    try {
+      await dotenv.load(fileName: ".env");
+    } catch (e) {
+      debugPrint('Could not load .env file: $e');
+    }
   }
   runApp(const MyApp());
 }

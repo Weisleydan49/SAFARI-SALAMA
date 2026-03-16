@@ -1,5 +1,5 @@
 from app.db.database import engine, Base
-from app.models.user import User
+from app.models import User, Route, Vehicle, Trip, EmergencyAlert, Sacco, Rating, GpsPoint
 
 # Import all models here as you create them
 

@@ -36,6 +36,9 @@ app.include_router(emergency.router)
 app.include_router(trips.router)
 app.include_router(drivers.router)
 
+from app.api import websockets
+app.include_router(websockets.router)
+
 @app.get("/")
 def root():
     return {"message": "Safari Salama API", "status": "running"}

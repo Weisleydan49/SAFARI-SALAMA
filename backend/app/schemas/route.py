@@ -29,7 +29,6 @@ class RouteBase(BaseModel):
     description: Optional[str] = None
     estimated_duration_minutes: Optional[int] = None
     distance_km: Optional[Decimal] = None
-    fare_amount: Optional[Decimal] = None
 
 
 class RouteCreate(RouteBase):

@@ -57,12 +57,15 @@ def create_vehicle(vehicle_data: VehicleCreate, db: Session = Depends(get_db)):
     return new_vehicle
 
 @router.patch("/{vehicle_id}/location", response_model=VehicleResponse)
-def update_vehicle_location(
+async def update_vehicle_location(
     vehicle_id: str,
     location_data: VehicleLocationUpdate,
     db: Session = Depends(get_db)
 ):
     """Update vehicle location (for GPS tracking)"""
+    from app.models.gps_point import GpsPoint
+    from app.websockets.manager import connection_manager
+    
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
         raise HTTPException(
@@ -75,6 +78,28 @@ def update_vehicle_location(
     vehicle.last_location_update = datetime.utcnow()
     vehicle.is_online = True
     
+    # Save to GPS History
+    gps_point = GpsPoint(
+        vehicle_id=vehicle.id,
+        latitude=location_data.current_latitude,
+        longitude=location_data.current_longitude,
+        timestamp=datetime.utcnow()
+    )
+    db.add(gps_point)
     db.commit()
     db.refresh(vehicle)
+    
+    # Broadcast to websocket listeners
+    if vehicle.route_id:
+        await connection_manager.broadcast_vehicle_location(
+            route_id=str(vehicle.route_id),
+            vehicle_data={
+                "vehicle_id": str(vehicle.id),
+                "registration_number": vehicle.registration_number,
+                "latitude": float(vehicle.current_latitude),
+                "longitude": float(vehicle.current_longitude),
+                "timestamp": vehicle.last_location_update.isoformat()
+            }
+        )
+        
     return vehicle
