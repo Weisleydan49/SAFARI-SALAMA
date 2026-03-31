@@ -7,6 +7,7 @@ class Vehicle{
   final bool isOnline;
   final String vehicleType;
   final int capacity;
+  final DateTime? createdAt;
 
   Vehicle({
     required this.id,
@@ -17,6 +18,7 @@ class Vehicle{
     required this.isOnline,
     required this.vehicleType,
     required this.capacity,
+    this.createdAt,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class Vehicle{
       isOnline: json['is_online'] ?? false,
       vehicleType: json['vehicle_type'] ?? 'minibus',
       capacity: json['capacity'] ?? 14,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
     );
   }
 }

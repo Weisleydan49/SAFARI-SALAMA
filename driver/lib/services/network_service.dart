@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NetworkService {
-  static final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://192.168.1.198:8000/api/';
+  static final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://192.168.8.108:8000/api/';
 
   static Future<http.Response> post(String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl$endpoint');
