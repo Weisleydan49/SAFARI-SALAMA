@@ -36,7 +36,8 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
       final vehiclesData = await ApiService.getVehiclesByRoute(widget.route.id);
       final vehicles = vehiclesData
           .map((data) => Vehicle.fromJson(data))
-          .where((v) => v.isOnline) // Only show online vehicles
+          // For development, we might want to show all vehicles or just online ones
+          // .where((v) => v.isOnline)
           .toList();
 
       setState(() {
@@ -54,16 +55,74 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
 
   // Show bottom sheet to select a vehicle for this route
   void _showVehicleSelectionSheet() {
-    if (_vehiclesOnRoute.isEmpty) {
+    if (_vehiclesOnRoute.isEmpty && !_isLoadingVehicles) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('No vehicles available on this route at the moment'),
+          content: Text('No vehicles found on this route'),
           backgroundColor: Colors.orange,
         ),
       );
       return;
     }
-    }
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Select Vehicle',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Divider(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _vehiclesOnRoute.length,
+                  itemBuilder: (context, index) {
+                    final vehicle = _vehiclesOnRoute[index];
+                    return ListTile(
+                      leading: Icon(
+                        Icons.directions_bus,
+                        color: vehicle.isOnline ? Colors.green : Colors.grey,
+                      ),
+                      title: Text(vehicle.registrationNumber),
+                      subtitle: Text('${vehicle.vehicleType} • ${vehicle.capacity} seats'),
+                      trailing: vehicle.isOnline 
+                        ? const Badge(label: Text('Online'), backgroundColor: Colors.green)
+                        : null,
+                      onTap: () {
+                        Navigator.pop(context); // Close sheet
+                        _navigateToActiveTrip(vehicle);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _navigateToActiveTrip(Vehicle vehicle) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ActiveTripScreen(
+          vehicle: vehicle,
+          route: widget.route,
+        ),
+      ),
+    );
+  }
+
 // Start trip without selecting specific vehicle
   void _startTripWithoutVehicle() {
     // Navigate directly to active trip without vehicle selection
@@ -74,8 +133,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
         builder: (context) =>
             ActiveTripScreen(
               vehicle: Vehicle(
-                id: '',
-                // Empty - backend will assign
+                id: '', // Empty - backend will assign
                 registrationNumber: 'Any Available',
                 isOnline: true,
                 vehicleType: 'matatu',
@@ -139,6 +197,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[700],
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -167,6 +226,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
                 onPressed: _startTripWithoutVehicle,
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size(double.infinity, 50),
                   side: BorderSide(color: Colors.green[700]!),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -272,7 +332,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${_vehiclesOnRoute.length} online',
+                      '${_vehiclesOnRoute.length} vehicles',
                       style: TextStyle(
                         color: _vehiclesOnRoute.isEmpty ? Colors.grey[700] : Colors.green[700],
                         fontWeight: FontWeight.bold,
@@ -302,7 +362,7 @@ class _RouteDetailScreenState extends State<RouteDetailScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
-                  'Tap "Start Trip" below to select a vehicle',
+                  'Tap "Select Vehicle" below to pick a specific matatu',
                   style: TextStyle(color: Colors.grey[600], fontSize: 14),
                 ),
               ),

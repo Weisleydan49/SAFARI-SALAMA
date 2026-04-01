@@ -42,9 +42,13 @@ def start_trip(
                 detail="route_id is required when vehicle_id is not specified"
             )
 
-        # Find an available online vehicle on this route
+        # Find an available online vehicle on this route or unassigned
+        from sqlalchemy import or_
         available_vehicle = db.query(Vehicle).filter(
-            Vehicle.route_id == trip_data.route_id,
+            or_(
+                Vehicle.route_id == trip_data.route_id,
+                Vehicle.route_id == None
+            ),
             Vehicle.is_online == True,
             Vehicle.is_active == True
         ).first()

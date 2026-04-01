@@ -15,9 +15,7 @@ def get_routes(
     active_only: bool = True,
     db: Session = Depends(get_db)
 ):
-    query = db.query(Route).options(
-        joinedload(Route.route_stops).joinedload(RouteStop.stop)
-    )
+    query = db.query(Route)
 
     if active_only:
         query = query.filter(Route.is_active == True)
@@ -30,7 +28,6 @@ def get_routes(
 def get_route(route_id: str, db: Session = Depends(get_db)):
     route = (
         db.query(Route)
-        .options(joinedload(Route.route_stops).joinedload(RouteStop.stop))
         .filter(Route.id == route_id, Route.is_active == True)
         .first()
     )
@@ -70,7 +67,6 @@ def create_route(route: RouteCreate, db: Session = Depends(get_db)):
     # reload with stops to match response_model
     new_route = (
         db.query(Route)
-        .options(joinedload(Route.route_stops).joinedload(RouteStop.stop))
         .filter(Route.id == new_route.id)
         .first()
     )

@@ -15,10 +15,18 @@ def get_vehicle_locations(
     db: Session = Depends(get_db)
 ):
     """Get all vehicle locations with optional filters"""
+    from sqlalchemy import or_
+    
     query = db.query(Vehicle).filter(Vehicle.is_active == True)
     
     if route_id:
-        query = query.filter(Vehicle.route_id == route_id)
+        # Return vehicles assigned to this route OR unassigned (available for any route)
+        query = query.filter(
+            or_(
+                Vehicle.route_id == route_id,
+                Vehicle.route_id == None
+            )
+        )
     
     if is_online is not None:
         query = query.filter(Vehicle.is_online == is_online)

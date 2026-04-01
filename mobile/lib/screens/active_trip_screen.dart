@@ -1,10 +1,13 @@
+// mobile/lib/screens/active_trip_screen.dart
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/vehicle.dart';
 import '../models/route_model.dart';
+import '../models/trip.dart';
 import '../services/api_service.dart';
+import 'trip_tracking_screen.dart';
 
 class ActiveTripScreen extends StatefulWidget {
   final Vehicle vehicle;
@@ -115,6 +118,32 @@ class _ActiveTripScreenState extends State<ActiveTripScreen> {
             backgroundColor: Colors.green,
           ),
         );
+
+        // Navigate to trip tracking screen
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TripTrackingScreen(
+                  trip: Trip(
+                    id: _tripId!,
+                    userId: _userId!,
+                    vehicleId: widget.vehicle.id,
+                    routeId: widget.route?.id,
+                    startLatitude: _currentPosition!.latitude,
+                    startLongitude: _currentPosition!.longitude,
+                    startTime: DateTime.now(),
+                    paymentStatus: 'pending',
+                    tripStatus: 'active',
+                  ),
+                  route: widget.route,
+                  vehicle: widget.vehicle,
+                ),
+              ),
+            );
+          }
+        });
       }
     } catch (e) {
       if (mounted) {

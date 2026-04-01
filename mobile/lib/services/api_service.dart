@@ -142,15 +142,15 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
 
+    // userId must be passed as a query parameter as expected by the backend
     final response = await http.post(
-      Uri.parse('$baseUrl/api/trips/start'),
+      Uri.parse('$baseUrl/api/trips/start?user_id=$userId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        'user_id': userId,
-        if (vehicleId != null && vehicleId.isNotEmpty) 'vehicle_id': vehicleId,  // Only include if not empty
+        if (vehicleId != null && vehicleId.isNotEmpty) 'vehicle_id': vehicleId,
         'start_latitude': startLatitude,
         'start_longitude': startLongitude,
         if (routeId != null) 'route_id': routeId,
