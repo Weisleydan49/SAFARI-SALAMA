@@ -406,4 +406,231 @@ class ApiService {
       return null;
     }
   }
+
+  // PAYMENT METHODS
+  
+  // Create payment for a trip
+  static Future<Map<String, dynamic>> createPayment({
+    required String tripId,
+    required String amount,
+    String paymentMethod = 'mpesa',
+    String? phoneNumber,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/payments/create');
+
+    final response = await http.post(
+      url,
+      headers: _getHeaders(token: token),
+      body: jsonEncode({
+        'trip_id': tripId,
+        'amount': amount,
+        'payment_method': paymentMethod,
+        if (phoneNumber != null) 'phone_number': phoneNumber,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to create payment: ${response.body}');
+    }
+  }
+
+  // Get payment details
+  static Future<Map<String, dynamic>> getPayment({
+    required String paymentId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/payments/$paymentId');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch payment: ${response.body}');
+    }
+  }
+
+  // Get payment history for user
+  static Future<List<Map<String, dynamic>>> getPaymentHistory({
+    required String userId,
+    int skip = 0,
+    int limit = 20,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/payments/user/$userId/history?skip=$skip&limit=$limit');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> payments = data['payments'] ?? [];
+      return payments.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to fetch payment history: ${response.body}');
+    }
+  }
+
+  // RATING METHODS
+  
+  // Create a rating for a trip
+  static Future<Map<String, dynamic>> createRating({
+    required String tripId,
+    required String driverId,
+    required int score,
+    String? feedback,
+    String? passengerId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/ratings/?passenger_id=$passengerId');
+
+    final response = await http.post(
+      url,
+      headers: _getHeaders(token: token),
+      body: jsonEncode({
+        'trip_id': tripId,
+        'driver_id': driverId,
+        'score': score,
+        if (feedback != null) 'feedback': feedback,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to create rating: ${response.body}');
+    }
+  }
+
+  // Get driver ratings
+  static Future<Map<String, dynamic>> getDriverRatings({
+    required String driverId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/ratings/driver/$driverId');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch driver ratings: ${response.body}');
+    }
+  }
+
+  // Get trip rating
+  static Future<Map<String, dynamic>> getTripRating({
+    required String tripId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/ratings/trip/$tripId');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+      return {}; // No rating yet
+    } else {
+      throw Exception('Failed to fetch trip rating: ${response.body}');
+    }
+  }
+
+  // SACCO/ADMIN METHODS
+  
+  // Get Sacco details
+  static Future<Map<String, dynamic>> getSacco({
+    required String saccoId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/admin/saccos/$saccoId');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch sacco: ${response.body}');
+    }
+  }
+
+  // Get Sacco vehicles
+  static Future<List<Map<String, dynamic>>> getSaccoVehicles({
+    required String saccoId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/admin/saccos/$saccoId/vehicles');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> vehicles = data['vehicles'] ?? [];
+      return vehicles.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to fetch sacco vehicles: ${response.body}');
+    }
+  }
+
+  // Get Sacco drivers
+  static Future<List<Map<String, dynamic>>> getSaccoDrivers({
+    required String saccoId,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/admin/saccos/$saccoId/drivers');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<dynamic> drivers = data['drivers'] ?? [];
+      return drivers.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to fetch sacco drivers: ${response.body}');
+    }
+  }
+
+  // Get Sacco analytics
+  static Future<Map<String, dynamic>> getSaccoAnalytics({
+    required String saccoId,
+    int days = 30,
+    String? token,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/admin/saccos/$saccoId/analytics?days=$days');
+
+    final response = await http.get(
+      url,
+      headers: _getHeaders(token: token),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch sacco analytics: ${response.body}');
+    }
+  }
 }
+

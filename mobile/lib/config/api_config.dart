@@ -10,7 +10,7 @@ class ApiConfig {
     } else {
       // This is used for debugging on your physical device.
       // Replace with your computer's IP (e.g., 192.168.1.XX)
-      return 'http://192.168.137.238:3000';
+      return 'http://192.168.137.149:3000';
     }
   }
 

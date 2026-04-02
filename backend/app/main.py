@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.core.config import settings
-from app.api import auth, routes, vehicles, emergency, trips, users, drivers
+from app.api import auth, routes, vehicles, emergency, trips, users, drivers, payments, ratings, admin
 from app.api.routes import router as routes_router
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,6 +34,9 @@ app.include_router(vehicles.router)
 app.include_router(emergency.router)
 app.include_router(trips.router)
 app.include_router(drivers.router)
+app.include_router(payments.router)
+app.include_router(ratings.router)
+app.include_router(admin.router)
 
 from app.api import websockets
 app.include_router(websockets.router)

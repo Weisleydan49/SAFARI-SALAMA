@@ -10,7 +10,7 @@ class StopResponse(BaseModel):
     name: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RouteStopResponse(BaseModel):
@@ -18,7 +18,7 @@ class RouteStopResponse(BaseModel):
     stop: StopResponse
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RouteBase(BaseModel):
@@ -43,5 +43,5 @@ class RouteResponse(RouteBase):
     stops: List[RouteStopResponse] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
